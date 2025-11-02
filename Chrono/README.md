@@ -12,10 +12,11 @@ Descrizione:
 
 Scelte di sviluppo:
 
-    Flutter - linguaggio richiesto
-    Gestione del tempo - Timer.periodic, usato per aggiornare il tempo in secondi
-    Interfaccia - minuti e secondi disposti a due cifre ciascuna per simulare un cronometro
-    Widget usati - Scaffold (contenitore principale), Column (disposizione verticale) e FloatingActionButton (pulsante interagibile)
+    Flutter - linguaggio richiesto.
+    Gestione del tempo - Timer.periodic, usato per aggiornare il tempo in secondi.
+    Interfaccia - minuti e secondi disposti a due cifre ciascuna per simulare un cronometro.
+    Widget usati - Scaffold (contenitore principale), Column (disposizione verticale) e FloatingActionButton (pulsante interagibile).
+
 
 
 

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -18,9 +19,47 @@ class MyStopWatchApp extends StatelessWidget {
   }
 }
 
-class StopWatchPage extends StatelessWidget {
+class StopWatchPage extends StatefulWidget {
+  @override
+  State<StopWatchPage> createState() => _StopWatchPageState();
+}
+
+class _StopWatchPageState extends State<StopWatchPage> {
+  int secondi = 0;
+  Timer? timer;
+  bool isRunning = false;
+
+ 
+  void startTimer() {
+    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        secondi++;
+      });
+    });
+  }
+
+
+  void stopTimer() {
+    timer?.cancel();
+  }
+
+
+  void resetTimer() {
+    timer?.cancel();
+    setState(() {
+      secondi = 0;
+      isRunning = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    int minuti = secondi ~/ 60;
+    int sec = secondi % 60;
+
+    String minStr = minuti.toString().padLeft(2, '0');
+    String secStr = sec.toString().padLeft(2, '0');
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Cronometro"),
@@ -31,7 +70,7 @@ class StopWatchPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              "00:00",
+              "$minStr:$secStr",
               style: TextStyle(
                 fontSize: 70,
                 fontWeight: FontWeight.bold,
@@ -40,34 +79,44 @@ class StopWatchPage extends StatelessWidget {
             SizedBox(height: 10),
             Text(
               "minuti : secondi",
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey,
-              ),
+              style: TextStyle(fontSize: 18, color: Colors.grey),
             ),
           ],
         ),
       ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton.extended(
-            onPressed: () {
-              
-            },
-            icon: Icon(Icons.play_arrow),
-            label: Text("START"),
-          ),
-          SizedBox(width: 10),
-          FloatingActionButton.extended(
-            onPressed: () {
-              
-            },
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 20, right: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            FloatingActionButton.extended(
+              onPressed: () {
+                if (!isRunning) {
+                  startTimer();
+                  setState(() {
+                    isRunning = true;
+                  });
+                } else {
+                  stopTimer();
+                  setState(() {
+                    isRunning = false;
+                  });
+                }
+              },
+              icon: Icon(isRunning ? Icons.stop : Icons.play_arrow),
+              label: Text(isRunning ? "STOP" : "START"),
+            ),
+            SizedBox(width: 10),
+            FloatingActionButton.extended(
+              onPressed: () {
+                resetTimer();
+              },
           
-            icon: Icon(Icons.pause),
-            label: Text("PAUSE"),
-          ),
-        ],
+              icon: Icon(Icons.refresh),
+              label: Text("RESET"),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,27 +1,27 @@
 import 'dart:io';
 
 void main() async {
-  print("Enter your name:");
+  print("Enter username:");
   String? name = stdin.readLineSync();
 
   if (name == null || name.isEmpty) {
-    print("Invalid name. Exiting.");
+    print("User already taken. Exiting");
     return;
   }
 
-  // Connessione al server
   final socket = await Socket.connect('127.0.0.1', 3000);
-  print('Connected to chat server as $name.');
+  print("Connected to chatroom as $name");
 
-  socket.write('$name has joined the chat.\n');
+  socket.write("$name has joined the chatroom.\n");
 
- 
+  // Ascolta i messaggi degli altri
   socket.listen((data) {
     print(String.fromCharCodes(data).trim());
   });
 
-  // Input keyboard
+  // Legge i messaggi input
   stdin.listen((data) {
-    socket.write('$name: ${String.fromCharCodes(data)}');
+    String msg = String.fromCharCodes(data).trim();
+    socket.write("$name: $msg\n");
   });
 }

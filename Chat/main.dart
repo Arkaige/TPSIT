@@ -112,8 +112,17 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void sendMessage() {
-    if (controller.text.trim().isEmpty){
-        return;
+    if (controller.text.trim().isEmpty) {
+      return;
+    }
+  
+    String msg = controller.text.trim();
+    setState(() {
+      messages.add("${widget.name}: $msg");
+    });
+    socket.write("${widget.name}: $msg\n");
+
+      controller.clear();
     }
     
 

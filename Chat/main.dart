@@ -89,7 +89,7 @@ class _ChatPageState extends State<ChatPage> {
   void connectToServer() async {
     try {
     
-      socket = await Socket.connect('10.0.2.2', 3000);
+      socket = await Socket.connect('localhost', 3000);
 
       socket.write("${widget.name} has joined the chatroom\n");
 
@@ -115,7 +115,6 @@ class _ChatPageState extends State<ChatPage> {
     if (controller.text.trim().isEmpty) {
       return;
     }
-  
     String msg = controller.text.trim();
     setState(() {
       messages.add("${widget.name}: $msg");
@@ -123,10 +122,8 @@ class _ChatPageState extends State<ChatPage> {
     socket.write("${widget.name}: $msg\n");
 
     controller.clear();
-
     
-
-    String msg = controller.text.trim();
+    msg = controller.text.trim();
     socket.write("${widget.name}: $msg\n");
 
     controller.clear();

@@ -122,8 +122,8 @@ class _ChatPageState extends State<ChatPage> {
     });
     socket.write("${widget.name}: $msg\n");
 
-      controller.clear();
-    }
+    controller.clear();
+
     
 
     String msg = controller.text.trim();

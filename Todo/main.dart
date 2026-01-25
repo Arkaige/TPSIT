@@ -1,92 +1,81 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
 import 'model.dart';
-import 'notifier.dart';
 import 'widgets.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'am043 todo list',
-      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.red)),
-      home: ChangeNotifierProvider<TodoListNotifier>(
-        create: (notifier) => TodoListNotifier(),
-        child: const MyHomePage(title: 'am043 todo list'),
-      ),
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Home()
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
 
-  final String title;
-
+class Home extends StatefulWidget {
+  const Home({super.key});
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<Home> createState() => _HomeState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  final TextEditingController _textFieldController = TextEditingController();
 
-  Future<void> _displayDialog(TodoListNotifier notifier) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('add todo item'),
-          content: TextField(
-            controller: _textFieldController,
-            decoration: const InputDecoration(hintText: 'type here ...'),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Add'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                notifier.addTodo(_textFieldController.text);
-                _textFieldController.clear();
-              },
-            ),
-          ],
-        );
-      },
-    );
+class _HomeState extends State<Home> {
+
+  List<Todo> todos = [];
+
+  void addTodo() {
+    setState(() {
+      todos.add(Todo(name: '', checked: false));
+    });
+  }
+
+  void deleteTodo(Todo t) {
+    setState(() {
+      todos.remove(t);
+    });
+  }
+
+  void toggleTodo(Todo t) {
+    setState(() {
+      t.checked = !t.checked;
+    });
+  }
+
+  void changeText(Todo t, String txt) {
+    setState(() {
+      t.name = txt;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final TodoListNotifier notifier = context.watch<TodoListNotifier>();
-
     return Scaffold(
       appBar: AppBar(
-        shadowColor: Theme.of(context).shadowColor,
-        elevation: 4,
-        title: Text(widget.title),
+        title: const Text('Todo list'),
+        backgroundColor: Colors.green,
       ),
-      body: Center(
-        child: ListView.builder(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          itemCount: notifier.length,
-          itemBuilder: (context, index) {
-            Todo todo = notifier.getTodo(index);
-            return TodoItem(todo: todo);
-          },
-        ),
+      body: ListView.builder(
+        itemCount: todos.length,
+        itemBuilder: (context, i) {
+          return TodoItem(
+            todo: todos[i],
+            onDelete: deleteTodo,
+            onCheck: toggleTodo,
+            onChange: changeText,
+          );
+        },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _displayDialog(notifier),
-        tooltip: 'add todo',
+        onPressed: addTodo,
         child: const Icon(Icons.add),
+        backgroundColor: Colors.blue,
       ),
     );
   }

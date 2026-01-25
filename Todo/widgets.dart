@@ -1,36 +1,76 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
 import 'model.dart';
-import 'notifier.dart';
 
-class TodoItem extends StatelessWidget {
-  TodoItem({required this.todo}) : super(key: ObjectKey(todo));
+class TodoItem extends StatefulWidget {
+
+  const TodoItem({
+    super.key,
+    required this.todo,
+    required this.onDelete,
+    required this.onCheck,
+    required this.onChange,
+  });
 
   final Todo todo;
+  final Function(Todo) onDelete;
+  final Function(Todo) onCheck;
+  final Function(Todo, String) onChange;
+  @override
+  State<TodoItem> createState() => TodoItemState();
+}
 
-  TextStyle? _getTextStyle(bool checked) {
-    if (!checked) return null;
 
-    return const TextStyle(
-      color: Colors.black45,
-      decoration: TextDecoration.lineThrough,
-    );
+class TodoItemState extends State<TodoItem> {
+
+  var controller = TextEditingController();
+  bool edit = false;
+  @override
+  void initState() {
+    super.initState();
+    controller.text = widget.todo.name;
   }
 
   @override
   Widget build(BuildContext context) {
-    final TodoListNotifier notifier = context.watch<TodoListNotifier>();
-
-    return ListTile(
-      onTap: () {
-        notifier.changeTodo(todo);
-      },
-      onLongPress: (() {
-        notifier.deleteTodo(todo);
-      }),
-      leading: CircleAvatar(child: Text(todo.name[0])),
-      title: Text(todo.name, style: _getTextStyle(todo.checked)),
+    return Card(
+      child: Row(
+        children: [
+          Checkbox(
+            value: widget.todo.checked,
+            onChanged: (_) {
+              widget.onCheck(widget.todo);
+            },
+          ),
+          Expanded(
+            child: TextField(
+              controller: controller,
+              readOnly: !edit,
+              decoration: const InputDecoration(
+                border: InputBorder.none,
+                hintText: '. . .',
+              ),
+              onTap: () {
+                setState(() {
+                  edit = true;
+                });
+              },
+              onEditingComplete: () {
+                widget.onChange(widget.todo, controller.text);
+                setState(() {
+                  edit = false;
+                });
+              },
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.delete),
+            color: Colors.red,
+            onPressed: () {
+              widget.onDelete(widget.todo);
+            }, 
+          ),
+        ],
+      ),
     );
   }
 }

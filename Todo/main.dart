@@ -9,11 +9,12 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Home()
+      home: Home(),
     );
   }
 }
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
 
 class Home extends StatefulWidget {
   const Home({super.key});
+
   @override
   State<Home> createState() => _HomeState();
 }
@@ -28,17 +30,29 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
 
-  List<Todo> todos = [];
+  List<Note> notes = [];
 
-  void addTodo() {
+  void addNote() {
     setState(() {
-      todos.add(Todo(name: '', checked: false));
+      notes.add(Note(todos: []));
     });
   }
 
-  void deleteTodo(Todo t) {
+  void deleteNote(Note n) {
     setState(() {
-      todos.remove(t);
+      notes.remove(n);
+    });
+  }
+
+  void addTodo(Note n) {
+    setState(() {
+      n.todos.add(Todo(name: '', checked: false));
+    });
+  }
+
+  void deleteTodo(Note n, Todo t) {
+    setState(() {
+      n.todos.remove(t);
     });
   }
 
@@ -58,24 +72,52 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Todo list'),
+        title: const Text('zKeep'),
         backgroundColor: Colors.green,
       ),
       body: ListView.builder(
-        itemCount: todos.length,
+        itemCount: notes.length,
         itemBuilder: (context, i) {
-          return TodoItem(
-            todo: todos[i],
-            onDelete: deleteTodo,
-            onCheck: toggleTodo,
-            onChange: changeText,
+          final note = notes[i];
+
+          return Card(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.red),
+                      onPressed: () {
+                        deleteNote(note);
+                      },
+                    ),
+                  ],
+                ),
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: note.todos.length,
+                  itemBuilder: (context, j) {
+                    return TodoItem(
+                      todo: note.todos[j],
+                      onDelete: (t) => deleteTodo(note, t),
+                      onCheck: toggleTodo,
+                      onChange: changeText,
+                    );
+                  },
+                ),
+                TextButton(
+                  onPressed: () => addTodo(note),
+                  child: const Text('aggiungi todo'),
+                ),
+              ],
+            ),
           );
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: addTodo,
-        child: const Icon(Icons.add),
+        onPressed: addNote,
         backgroundColor: Colors.blue,
+        child: const Icon(Icons.add),
       ),
     );
   }

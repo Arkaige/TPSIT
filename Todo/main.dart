@@ -29,30 +29,18 @@ class Home extends StatefulWidget {
 
 
 class _HomeState extends State<Home> {
+  
+  List<Todo> todos = [];
 
-  List<Note> notes = [];
-
-  void addNote() {
+  void addTodo() {
     setState(() {
-      notes.add(Note(todos: []));
+      todos.add(Todo(name: '', checked: false));
     });
   }
 
-  void deleteNote(Note n) {
+  void deleteTodo(Todo t) {
     setState(() {
-      notes.remove(n);
-    });
-  }
-
-  void addTodo(Note n) {
-    setState(() {
-      n.todos.add(Todo(name: '', checked: false));
-    });
-  }
-
-  void deleteTodo(Note n, Todo t) {
-    setState(() {
-      n.todos.remove(t);
+      todos.remove(t);
     });
   }
 
@@ -72,50 +60,22 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('zKeep'),
+        title: const Text('Todo list'),
         backgroundColor: Colors.green,
       ),
       body: ListView.builder(
-        itemCount: notes.length,
+        itemCount: todos.length,
         itemBuilder: (context, i) {
-          final note = notes[i];
-
-          return Card(
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.delete, color: Colors.red),
-                      onPressed: () {
-                        deleteNote(note);
-                      },
-                    ),
-                  ],
-                ),
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: note.todos.length,
-                  itemBuilder: (context, j) {
-                    return TodoItem(
-                      todo: note.todos[j],
-                      onDelete: (t) => deleteTodo(note, t),
-                      onCheck: toggleTodo,
-                      onChange: changeText,
-                    );
-                  },
-                ),
-                TextButton(
-                  onPressed: () => addTodo(note),
-                  child: const Text('aggiungi todo'),
-                ),
-              ],
-            ),
+          return TodoItem(
+            todo: todos[i],
+            onDelete: deleteTodo,
+            onCheck: toggleTodo,
+            onChange: changeText,
           );
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: addNote,
+        onPressed: addTodo,
         backgroundColor: Colors.blue,
         child: const Icon(Icons.add),
       ),

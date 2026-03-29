@@ -1,13 +1,16 @@
 class Todo {
-  Todo({required this.name, required this.checked});
-
+  int? id;
+  int? noteId;
   String name;
   bool checked;
+ 
+  Todo(this.name, this.checked);
 }
-
-
+ 
 class Note {
-  Note({required this.todos});
-
+  int? id;
+  String title;
   List<Todo> todos;
+ 
+  Note(this.title, this.todos);
 }

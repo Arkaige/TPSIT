@@ -1,0 +1,44 @@
+{
+  "prodotti": [
+    {
+      "id": "1",
+      "nome": "Cuffie Bluetooth Pro",
+      "prezzo": 79.99,
+      "quantitaDisponibile": 25,
+      "categoria": "Elettronica",
+      "inEvidenza": true
+    },
+    {
+      "id": "2",
+      "nome": "Tastiera Meccanica RGB",
+      "prezzo": 129.00,
+      "quantitaDisponibile": 15,
+      "categoria": "Elettronica",
+      "inEvidenza": false
+    },
+    {
+      "id": "3",
+      "nome": "Mouse Gaming Wireless",
+      "prezzo": 49.99,
+      "quantitaDisponibile": 50,
+      "categoria": "Elettronica",
+      "inEvidenza": true
+    },
+    {
+      "id": "4",
+      "nome": "Zaino Impermeabile",
+      "prezzo": 39.50,
+      "quantitaDisponibile": 30,
+      "categoria": "Accessori",
+      "inEvidenza": false
+    },
+    {
+      "id": "5",
+      "nome": "Lampada LED da Scrivania",
+      "prezzo": 24.99,
+      "quantitaDisponibile": 100,
+      "categoria": "Casa",
+      "inEvidenza": true
+    }
+  ]
+}
